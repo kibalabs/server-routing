@@ -5,8 +5,8 @@ before_script:
 deploy:
   stage: deploy
   script:
-    - ssh -i "$FREEBOX_SSH_KEY" $FREEBOX_USER@$FREEBOX_URL '
-        echo "I'm in!" &&
+    - ssh -i "$FREEBOX_SSH_KEY" $FREEBOX_USER@$FREEBOX_URL "
+        echo 'I\'m in!' &&
         cd ~/Projects && 
         ls
-    '
+        "

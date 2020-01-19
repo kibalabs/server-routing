@@ -8,7 +8,6 @@ deploy:
   stage: deploy
   script:
     - ssh $FREEBOX_USER@$FREEBOX_URL "
-        echo 'I\'m in!' &&
         cd ~/Projects && 
         ls
         "

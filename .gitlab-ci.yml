@@ -2,7 +2,7 @@ deploy:
   stage: deploy
   script:
     - ssh -i "$FREEBOX_SSH_KEY" $FREEBOX_USER@$FREEBOX_URL <<'ENDSSH'
-        # commands to run on remote host
-        echo "I'm in!"
+        echo "I'm in!" &&
+        cd ~/Projects && 
         ls
         ENDSSH

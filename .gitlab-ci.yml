@@ -1,4 +1,5 @@
 before_script:
+  - echo $CI_PROJECT_NAME
   - eval $(ssh-agent -s)
   - ssh-add <(echo "$FREEBOX_SSH_KEY")
   - mkdir -p ~/.ssh
@@ -8,6 +9,7 @@ deploy:
   stage: deploy
   script:
     - ssh $FREEBOX_USER@$FREEBOX_URL "
-        cd ~/Projects && 
-        ls
+        cd ~/Projects/Server-Routing && 
+        git pull &&
+        ./src/run.sh
         "

@@ -1,11 +1,13 @@
 before_script:
+  - eval $(ssh-agent -s)
+  - ssh-add <(echo "$FREEBOX_SSH_KEY")
   - mkdir -p ~/.ssh
   - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
 
 deploy:
   stage: deploy
   script:
-    - ssh -i "$FREEBOX_SSH_KEY" $FREEBOX_USER@$FREEBOX_URL "
+    - ssh $FREEBOX_USER@$FREEBOX_URL "
         echo 'I\'m in!' &&
         cd ~/Projects && 
         ls

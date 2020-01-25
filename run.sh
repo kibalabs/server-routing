@@ -16,6 +16,8 @@ docker run \
     --volume /var/run/docker.sock:/tmp/docker.sock:ro \
     server-routing
 
+docker stop server-routing-letsencrypt || true
+docker rm server-routing-letsencrypt || true
 docker run \
     --detach \
     --name server-routing-letsencrypt \

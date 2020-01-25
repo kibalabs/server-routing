@@ -9,6 +9,7 @@ deploy:
   script:
     - ssh $FREEBOX_USER@$FREEBOX_URL "
         cd ~/Projects/$CI_PROJECT_NAME &&
+        git reset --hard HEAD &&
         git pull &&
         ./run.sh
         "

@@ -23,5 +23,5 @@ docker run \
     --name server-routing-letsencrypt \
     --volumes-from server-routing \
     --volume /var/run/docker.sock:/var/run/docker.sock:ro \
-    --env "DEFAULT_EMAIL=krishan@whitemonkeylabs.com" \
+    --env "DEFAULT_EMAIL=krishan@kibalabs.com" \
     jrcs/letsencrypt-nginx-proxy-companion

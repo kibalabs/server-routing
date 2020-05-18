@@ -7,7 +7,7 @@ run on freebox:
   variables:
     RUNNABLE_DIRECTORY: "~/deployments/$CI_PROJECT_PATH/$CI_COMMIT_SHORT_SHA"
   before_script:
-    - echo "${FREEBOX_SSH_KEY}" | ssh-add -
+    - eval $(ssh-agent -s) && echo "${CERTBOX_SSH_KEY}" | ssh-add -
   script:
     - ssh $FREEBOX_USER@$FREEBOX_URL "
         rm -rf $RUNNABLE_DIRECTORY &&
@@ -22,7 +22,7 @@ run on certbox:
   variables:
     RUNNABLE_DIRECTORY: "~/deployments/$CI_PROJECT_PATH/$CI_COMMIT_SHORT_SHA"
   before_script:
-    - echo "${CERTBOX_SSH_KEY}" | ssh-add -
+    - eval $(ssh-agent -s) && echo "${CERTBOX_SSH_KEY}" | ssh-add -
   script:
     - ssh $CERTBOX_USER@$CERTBOX_URL "
         rm -rf $RUNNABLE_DIRECTORY &&

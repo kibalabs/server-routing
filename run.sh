@@ -1,12 +1,15 @@
 #!/usr/bin/env bash
 set -e -o pipefail
 
-docker build -t server-routing src/
-docker stop server-routing || true
-docker rm server-routing || true
+name="server-routing"
+dockerImageName='jwilder/nginx-proxy:latest'
+
+docker pull ${dockerImageName}
+docker stop ${name} || true
+docker rm ${name} || true
 docker run \
     --detach \
-    --name server-routing \
+    --name ${name} \
     --publish 80:80 \
     --publish 443:443 \
     --restart on-failure \
@@ -14,14 +17,19 @@ docker run \
     --volume /etc/nginx/vhost.d \
     --volume /usr/share/nginx/html \
     --volume /var/run/docker.sock:/tmp/docker.sock:ro \
-    jwilder/nginx-proxy:latest
+    ${dockerImageName}
 
-docker stop server-routing-letsencrypt || true
-docker rm server-routing-letsencrypt || true
+proxyContainerName=${name}
+name="server-routing-letsencrypt"
+dockerImageName='jrcs/letsencrypt-nginx-proxy-companion'
+
+docker pull ${dockerImageName}
+docker stop ${name} || true
+docker rm ${name} || true
 docker run \
     --detach \
-    --name server-routing-letsencrypt \
-    --volumes-from server-routing \
+    --name ${name} \
+    --volumes-from ${proxyContainerName} \
     --volume /var/run/docker.sock:/var/run/docker.sock:ro \
     --env "DEFAULT_EMAIL=krishan@kibalabs.com" \
-    jrcs/letsencrypt-nginx-proxy-companion
+    ${dockerImageName}

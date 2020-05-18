@@ -1,12 +1,15 @@
 #!/usr/bin/env bash
 set -e -o pipefail
 
-docker build -t server-routing src/
-docker stop server-routing || true
-docker rm server-routing || true
+name="server-routing"
+dockerImageName='jwilder/nginx-proxy:latest'
+
+docker pull ${dockerImageName}
+docker stop ${name} || true
+docker rm ${name} || true
 docker run \
     --detach \
-    --name server-routing \
+    --name ${name} \
     --publish 80:80 \
     --publish 443:443 \
     --restart on-failure \
@@ -15,4 +18,4 @@ docker run \
     --volume /usr/share/nginx/html \
     --volume /var/run/docker.sock:/tmp/docker.sock:ro \
     --env DEFAULT_HOST=certs.kiba.dev \
-    jwilder/nginx-proxy:latest
+    ${dockerImageName}

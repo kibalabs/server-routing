@@ -6,11 +6,8 @@ run on freebox:
   image: registry.gitlab.com/kibalabs/kiba/docker-images/ssh-able:latest
   variables:
     RUNNABLE_DIRECTORY: "~/deployments/$CI_PROJECT_PATH/$CI_COMMIT_SHORT_SHA"
-  before_script:
-    - add-ssh-key "${FREEBOX_SSH_KEY}"
   script:
-    - ssh-add -l
-    - ssh $FREEBOX_USER@$FREEBOX_URL "
+    - run-ssh-command $FREEBOX_SSH_KEY $FREEBOX_USER $FREEBOX_URL "
         rm -rf $RUNNABLE_DIRECTORY &&
         git clone $CI_REPOSITORY_URL $RUNNABLE_DIRECTORY &&
         cd $RUNNABLE_DIRECTORY &&
@@ -22,11 +19,8 @@ run on certbox:
   image: registry.gitlab.com/kibalabs/kiba/docker-images/ssh-able:latest
   variables:
     RUNNABLE_DIRECTORY: "~/deployments/$CI_PROJECT_PATH/$CI_COMMIT_SHORT_SHA"
-  before_script:
-    - add-ssh-key "${CERTBOX_SSH_KEY}"
   script:
-    - ssh-add -l
-    - ssh $CERTBOX_USER@$CERTBOX_URL "
+    - run-ssh-command $CERTBOX_SSH_KEY $CERTBOX_USER $CERTBOX_URL "
         rm -rf $RUNNABLE_DIRECTORY &&
         git clone $CI_REPOSITORY_URL $RUNNABLE_DIRECTORY &&
         cd $RUNNABLE_DIRECTORY &&

@@ -7,7 +7,7 @@ run on freebox:
   variables:
     RUNNABLE_DIRECTORY: "~/deployments/$CI_PROJECT_PATH/$CI_COMMIT_SHORT_SHA"
   script:
-    - run-ssh-command $FREEBOX_SSH_KEY $FREEBOX_USER $FREEBOX_URL "
+    - run-ssh-command "$FREEBOX_SSH_KEY" "$FREEBOX_USER" "$FREEBOX_URL" "
         rm -rf $RUNNABLE_DIRECTORY &&
         git clone $CI_REPOSITORY_URL $RUNNABLE_DIRECTORY &&
         cd $RUNNABLE_DIRECTORY &&
@@ -20,7 +20,7 @@ run on certbox:
   variables:
     RUNNABLE_DIRECTORY: "~/deployments/$CI_PROJECT_PATH/$CI_COMMIT_SHORT_SHA"
   script:
-    - run-ssh-command $CERTBOX_SSH_KEY $CERTBOX_USER $CERTBOX_URL "
+    - run-ssh-command "$CERTBOX_SSH_KEY" "$CERTBOX_USER" "$CERTBOX_URL" "
         rm -rf $RUNNABLE_DIRECTORY &&
         git clone $CI_REPOSITORY_URL $RUNNABLE_DIRECTORY &&
         cd $RUNNABLE_DIRECTORY &&

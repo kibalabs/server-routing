@@ -14,14 +14,5 @@ docker run \
     --volume /etc/nginx/vhost.d \
     --volume /usr/share/nginx/html \
     --volume /var/run/docker.sock:/tmp/docker.sock:ro \
+    --env DEFAULT_HOST=certs.kiba.dev \
     jwilder/nginx-proxy:latest
-
-docker stop server-routing-letsencrypt || true
-docker rm server-routing-letsencrypt || true
-docker run \
-    --detach \
-    --name server-routing-letsencrypt \
-    --volumes-from server-routing \
-    --volume /var/run/docker.sock:/var/run/docker.sock:ro \
-    --env "DEFAULT_EMAIL=krishan@kibalabs.com" \
-    jrcs/letsencrypt-nginx-proxy-companion

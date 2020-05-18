@@ -9,6 +9,7 @@ run on freebox:
   before_script:
     - add-ssh-key "${FREEBOX_SSH_KEY}"
   script:
+    - ssh-add -l
     - ssh $FREEBOX_USER@$FREEBOX_URL "
         rm -rf $RUNNABLE_DIRECTORY &&
         git clone $CI_REPOSITORY_URL $RUNNABLE_DIRECTORY &&
@@ -24,6 +25,7 @@ run on certbox:
   before_script:
     - add-ssh-key "${CERTBOX_SSH_KEY}"
   script:
+    - ssh-add -l
     - ssh $CERTBOX_USER@$CERTBOX_URL "
         rm -rf $RUNNABLE_DIRECTORY &&
         git clone $CI_REPOSITORY_URL $RUNNABLE_DIRECTORY &&

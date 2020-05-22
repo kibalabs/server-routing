@@ -8,8 +8,8 @@ docker pull ${dockerImageName}
 docker stop ${name} || true
 docker rm ${name} || true
 docker run \
-    --detach \
     --name ${name} \
+    --detach \
     --publish 80:80 \
     --publish 443:443 \
     --restart on-failure \
@@ -27,8 +27,9 @@ docker pull ${dockerImageName}
 docker stop ${name} || true
 docker rm ${name} || true
 docker run \
-    --detach \
     --name ${name} \
+    --detach \
+    --restart on-failure \
     --volumes-from ${proxyContainerName} \
     --volume /var/run/docker.sock:/var/run/docker.sock:ro \
     --env "DEFAULT_EMAIL=krishan@kibalabs.com" \

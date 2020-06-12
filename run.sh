@@ -2,7 +2,9 @@
 set -e -o pipefail
 
 name="server-routing"
-dockerImageName='jwilder/nginx-proxy:latest'
+dockerImageName="registry.gitlab.com/kibalabs/server-routing"
+dockerTag="latest"
+dockerImage="${dockerImageName}:${dockerTag}"
 
 docker pull ${dockerImageName}
 docker stop ${name} || true
@@ -17,11 +19,13 @@ docker run \
     --volume /etc/nginx/vhost.d \
     --volume /usr/share/nginx/html \
     --volume /var/run/docker.sock:/tmp/docker.sock:ro \
-    ${dockerImageName}
+    ${dockerImage}
 
 proxyContainerName=${name}
 name="server-routing-letsencrypt"
 dockerImageName='jrcs/letsencrypt-nginx-proxy-companion'
+dockerTag="latest"
+dockerImage="${dockerImageName}:${dockerTag}"
 
 docker pull ${dockerImageName}
 docker stop ${name} || true
@@ -33,4 +37,4 @@ docker run \
     --volumes-from ${proxyContainerName} \
     --volume /var/run/docker.sock:/var/run/docker.sock:ro \
     --env "DEFAULT_EMAIL=krishan@kibalabs.com" \
-    ${dockerImageName}
+    ${dockerImage}

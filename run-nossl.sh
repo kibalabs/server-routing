@@ -17,5 +17,5 @@ docker run \
     --volume /etc/nginx/vhost.d \
     --volume /usr/share/nginx/html \
     --volume /var/run/docker.sock:/tmp/docker.sock:ro \
-    --env DEFAULT_HOST=certs.kiba.dev \
+    --env DEFAULT_HOST=everycert-api.kibalabs.com \
     ${dockerImageName}

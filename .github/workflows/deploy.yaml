@@ -56,7 +56,7 @@ jobs:
                 --name ${NAME_2} \
                 --detach \
                 --restart on-failure \
-                --volumes-from ${NAME_1}
+                --volumes-from ${NAME_1} \
                 --volume /var/run/docker.sock:/tmp/docker.sock:ro \
                 ${DOCKER_IMAGE_2}
   # run on certbox:

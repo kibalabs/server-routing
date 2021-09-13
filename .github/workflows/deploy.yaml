@@ -1,0 +1,132 @@
+name: Deploy
+on:
+  push:
+    branches: [ main ]
+jobs:
+  deploy-proxy:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./proxy
+    env:
+      DOCKER_IMAGE: ghcr.io/${{ github.repository }}:latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v2
+      - name: Login to GitHub container registry
+        run: echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
+      - name: Build docker image
+        run: docker build --tag $DOCKER_IMAGE .
+      - name: Push to container registry
+        run: docker push $DOCKER_IMAGE
+  run-mdtpbox:
+    needs: deploy-proxy
+    runs-on: ubuntu-latest
+    env:
+      NAME_1: server-routing
+      DOCKER_IMAGE_1: ghcr.io/${{ github.repository }}:latest
+      NAME_2: server-routing-letsencrypt
+      DOCKER_IMAGE_2: nginxproxy/acme-companion:latest
+    steps:
+      - name: executing remote ssh commands
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.MDTPBOX_URL }}
+          username: ${{ secrets.MDTPBOX_USER }}
+          key: ${{ secrets.MDTPBOX_SSH_KEY }}
+          envs: NAME_1,DOCKER_IMAGE_1,NAME_2,DOCKER_IMAGE_2
+          script_stop: true
+          script: |
+            docker pull ${DOCKER_IMAGE_1}
+            docker stop ${NAME_1} && docker rm ${NAME_1} || true
+            docker run \
+                --name ${NAME_1} \
+                --detach \
+                --publish 80:80 \
+                --publish 443:443 \
+                --restart on-failure \
+                --volume certs:/etc/nginx/certs \
+                --volume vhost:/etc/nginx/vhost.d \
+                --volume html:/usr/share/nginx/html \
+                --volume /var/run/docker.sock:/tmp/docker.sock:ro \
+                ${DOCKER_IMAGE_1}
+            docker pull ${DOCKER_IMAGE_2}
+            docker stop ${NAME_2} && docker rm ${NAME_2} || true
+            docker run \
+                --name ${NAME_2} \
+                --detach \
+                --restart on-failure \
+                --volumes-from ${NAME_1} \
+                --volume /var/run/docker.sock:/var/run/docker.sock:ro \
+                --volume acme:/etc/acme.sh \
+                ${DOCKER_IMAGE_2}
+  run-freebox:
+    needs: deploy-proxy
+    runs-on: ubuntu-latest
+    env:
+      NAME_1: server-routing
+      DOCKER_IMAGE_1: ghcr.io/${{ github.repository }}:latest
+      NAME_2: server-routing-letsencrypt
+      DOCKER_IMAGE_2: nginxproxy/acme-companion:latest
+    steps:
+      - name: executing remote ssh commands
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.FREEBOX_URL }}
+          username: ${{ secrets.FREEBOX_USER }}
+          key: ${{ secrets.FREEBOX_SSH_KEY }}
+          envs: NAME_1,DOCKER_IMAGE_1,NAME_2,DOCKER_IMAGE_2
+          script_stop: true
+          script: |
+            docker pull ${DOCKER_IMAGE_1}
+            docker stop ${NAME_1} && docker rm ${NAME_1} || true
+            docker run \
+                --name ${NAME_1} \
+                --detach \
+                --publish 80:80 \
+                --publish 443:443 \
+                --restart on-failure \
+                --volume certs:/etc/nginx/certs \
+                --volume vhost:/etc/nginx/vhost.d \
+                --volume html:/usr/share/nginx/html \
+                --volume /var/run/docker.sock:/tmp/docker.sock:ro \
+                ${DOCKER_IMAGE_1}
+            docker pull ${DOCKER_IMAGE_2}
+            docker stop ${NAME_2} && docker rm ${NAME_2} || true
+            docker run \
+                --name ${NAME_2} \
+                --detach \
+                --restart on-failure \
+                --volumes-from ${NAME_1} \
+                --volume /var/run/docker.sock:/var/run/docker.sock:ro \
+                --volume acme:/etc/acme.sh \
+                ${DOCKER_IMAGE_2}
+  run-certbox:
+    needs: deploy-proxy
+    runs-on: ubuntu-latest
+    env:
+      NAME_1: server-routing
+      DOCKER_IMAGE_1: ghcr.io/${{ github.repository }}:latest
+    steps:
+      - name: executing remote ssh commands
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.CERTBOX_URL }}
+          username: ${{ secrets.CERTBOX_USER }}
+          key: ${{ secrets.CERTBOX_SSH_KEY }}
+          envs: NAME_1,DOCKER_IMAGE_1
+          script_stop: true
+          script: |
+            docker pull ${DOCKER_IMAGE_1}
+            docker stop ${NAME_1} && docker rm ${NAME_1} || true
+            docker run \
+                --name ${NAME_1} \
+                --detach \
+                --publish 80:80 \
+                --publish 443:443 \
+                --restart on-failure \
+                --volume certs:/etc/nginx/certs \
+                --volume vhost:/etc/nginx/vhost.d \
+                --volume html:/usr/share/nginx/html \
+                --volume /var/run/docker.sock:/tmp/docker.sock:ro \
+                ${DOCKER_IMAGE_1}

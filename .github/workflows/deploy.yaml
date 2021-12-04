@@ -129,4 +129,5 @@ jobs:
                 --volume vhost:/etc/nginx/vhost.d \
                 --volume html:/usr/share/nginx/html \
                 --volume /var/run/docker.sock:/tmp/docker.sock:ro \
+                --env DEFAULT_HOST=int.evrpg.com \
                 ${DOCKER_IMAGE_1}

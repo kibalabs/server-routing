@@ -34,6 +34,7 @@ jobs:
           host: ${{ secrets.MDTPBOX_URL }}
           username: ${{ secrets.MDTPBOX_USER }}
           key: ${{ secrets.MDTPBOX_SSH_KEY }}
+          port: ${{ secrets.MDTPBOX_PORT }}
           envs: NAME_1,DOCKER_IMAGE_1,NAME_2,DOCKER_IMAGE_2
           script_stop: true
           script: |
@@ -60,7 +61,7 @@ jobs:
                 --volume /var/run/docker.sock:/var/run/docker.sock:ro \
                 --volume acme:/etc/acme.sh \
                 ${DOCKER_IMAGE_2}
-  run-freebox:
+  run-apibox:
     needs: deploy-proxy
     runs-on: ubuntu-latest
     env:
@@ -72,9 +73,10 @@ jobs:
       - name: executing remote ssh commands
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.FREEBOX_URL }}
-          username: ${{ secrets.FREEBOX_USER }}
-          key: ${{ secrets.FREEBOX_SSH_KEY }}
+          host: ${{ secrets.APIBOX_URL }}
+          username: ${{ secrets.APIBOX_USER }}
+          key: ${{ secrets.APIBOX_SSH_KEY }}
+          port: ${{ secrets.APIBOX_PORT }}
           envs: NAME_1,DOCKER_IMAGE_1,NAME_2,DOCKER_IMAGE_2
           script_stop: true
           script: |
@@ -114,6 +116,7 @@ jobs:
           host: ${{ secrets.CERTBOX_URL }}
           username: ${{ secrets.CERTBOX_USER }}
           key: ${{ secrets.CERTBOX_SSH_KEY }}
+          port: ${{ secrets.CERTBOX_PORT }}
           envs: NAME_1,DOCKER_IMAGE_1
           script_stop: true
           script: |

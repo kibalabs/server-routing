@@ -208,3 +208,76 @@ jobs:
                 --volume /var/run/docker.sock:/tmp/docker.sock:ro \
                 --env DEFAULT_HOST=int.evrpg.com \
                 ${DOCKER_IMAGE_1}
+  run-ys-appbox:
+    needs: deploy-proxy
+    runs-on: ubuntu-latest
+    env:
+      NAME_1: server-routing
+      DOCKER_IMAGE_1: ghcr.io/${{ github.repository }}:latest
+      NAME_2: server-routing-letsencrypt
+      DOCKER_IMAGE_2: nginxproxy/acme-companion:2.2.8
+    steps:
+      - name: executing remote ssh commands
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.YS_APPBOX_URL }}
+          username: ${{ secrets.YS_APPBOX_USER }}
+          key: ${{ secrets.YS_APPBOX_SSH_KEY }}
+          port: ${{ secrets.YS_APPBOX_PORT }}
+          envs: NAME_1,DOCKER_IMAGE_1,NAME_2,DOCKER_IMAGE_2
+          script_stop: true
+          script: |
+            docker pull ${DOCKER_IMAGE_1}
+            docker stop ${NAME_1} && docker rm ${NAME_1} || true
+            docker run \
+                --name ${NAME_1} \
+                --detach \
+                --publish 80:80 \
+                --publish 443:443 \
+                --restart on-failure \
+                --volume certs:/etc/nginx/certs \
+                --volume vhost:/etc/nginx/vhost.d \
+                --volume html:/usr/share/nginx/html \
+                --volume /var/run/docker.sock:/tmp/docker.sock:ro \
+                ${DOCKER_IMAGE_1}
+            docker pull ${DOCKER_IMAGE_2}
+            docker stop ${NAME_2} && docker rm ${NAME_2} || true
+            docker run \
+                --name ${NAME_2} \
+                --detach \
+                --restart on-failure \
+                --volumes-from ${NAME_1} \
+                --volume /var/run/docker.sock:/var/run/docker.sock:ro \
+                --volume acme:/etc/acme.sh \
+                ${DOCKER_IMAGE_2}
+  run-ys-vpnbox:
+    needs: deploy-proxy
+    runs-on: ubuntu-latest
+    env:
+      NAME_1: server-routing
+      DOCKER_IMAGE_1: ghcr.io/${{ github.repository }}:latest
+    steps:
+      - name: executing remote ssh commands
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.YS_VPNBOX_URL }}
+          username: ${{ secrets.YS_VPNBOX_USER }}
+          key: ${{ secrets.YS_VPNBOX_SSH_KEY }}
+          port: ${{ secrets.YS_VPNBOX_PORT }}
+          envs: NAME_1,DOCKER_IMAGE_1
+          script_stop: true
+          script: |
+            docker pull ${DOCKER_IMAGE_1}
+            docker stop ${NAME_1} && docker rm ${NAME_1} || true
+            docker run \
+                --name ${NAME_1} \
+                --detach \
+                --publish 80:80 \
+                --publish 443:443 \
+                --restart on-failure \
+                --volume certs:/etc/nginx/certs \
+                --volume vhost:/etc/nginx/vhost.d \
+                --volume html:/usr/share/nginx/html \
+                --volume /var/run/docker.sock:/tmp/docker.sock:ro \
+                --env DEFAULT_HOST=int.evrpg.com \
+                ${DOCKER_IMAGE_1}

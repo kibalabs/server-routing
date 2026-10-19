@@ -15,3 +15,15 @@ jobs:
         uses: actions/checkout@v7
       - name: Build docker image
         run: docker build --tag $DOCKER_IMAGE .
+  build-letsencrypt:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./letsencrypt
+    env:
+      DOCKER_IMAGE: build
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v7
+      - name: Build docker image
+        run: docker build --tag $DOCKER_IMAGE .

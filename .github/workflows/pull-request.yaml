@@ -12,6 +12,6 @@ jobs:
       DOCKER_IMAGE: build
     steps:
       - name: Check out the repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v7
       - name: Build docker image
         run: docker build --tag $DOCKER_IMAGE .

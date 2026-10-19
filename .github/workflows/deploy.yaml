@@ -26,7 +26,7 @@ jobs:
       run:
         working-directory: ./letsencrypt
     env:
-      DOCKER_IMAGE: ghcr.io/${{ github.repository }}:letsencrypt
+      DOCKER_IMAGE: ghcr.io/${{ github.repository }}-letsencrypt:latest
     steps:
       - name: Check out the repo
         uses: actions/checkout@v7
@@ -43,7 +43,7 @@ jobs:
       NAME_1: server-routing
       DOCKER_IMAGE_1: ghcr.io/${{ github.repository }}:latest
       NAME_2: server-routing-letsencrypt
-      DOCKER_IMAGE_2: ghcr.io/${{ github.repository }}:letsencrypt
+      DOCKER_IMAGE_2: ghcr.io/${{ github.repository }}-letsencrypt:latest
     steps:
       - name: executing remote ssh commands
         uses: appleboy/ssh-action@master
@@ -85,7 +85,7 @@ jobs:
       NAME_1: server-routing
       DOCKER_IMAGE_1: ghcr.io/${{ github.repository }}:latest
       NAME_2: server-routing-letsencrypt
-      DOCKER_IMAGE_2: ghcr.io/${{ github.repository }}:letsencrypt
+      DOCKER_IMAGE_2: ghcr.io/${{ github.repository }}-letsencrypt:latest
     steps:
       - name: executing remote ssh commands
         uses: appleboy/ssh-action@master
@@ -158,7 +158,7 @@ jobs:
       NAME_1: server-routing
       DOCKER_IMAGE_1: ghcr.io/${{ github.repository }}:latest
       NAME_2: server-routing-letsencrypt
-      DOCKER_IMAGE_2: ghcr.io/${{ github.repository }}:letsencrypt
+      DOCKER_IMAGE_2: ghcr.io/${{ github.repository }}-letsencrypt:latest
     steps:
       - name: executing remote ssh commands
         uses: appleboy/ssh-action@master
@@ -231,7 +231,7 @@ jobs:
       NAME_1: server-routing
       DOCKER_IMAGE_1: ghcr.io/${{ github.repository }}:latest
       NAME_2: server-routing-letsencrypt
-      DOCKER_IMAGE_2: ghcr.io/${{ github.repository }}:letsencrypt
+      DOCKER_IMAGE_2: ghcr.io/${{ github.repository }}-letsencrypt:latest
     steps:
       - name: executing remote ssh commands
         uses: appleboy/ssh-action@master

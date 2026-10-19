@@ -13,7 +13,7 @@ jobs:
       DOCKER_IMAGE: ghcr.io/${{ github.repository }}:latest
     steps:
       - name: Check out the repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v7
       - name: Login to GitHub container registry
         run: echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
       - name: Build docker image
@@ -27,7 +27,7 @@ jobs:
       NAME_1: server-routing
       DOCKER_IMAGE_1: ghcr.io/${{ github.repository }}:latest
       NAME_2: server-routing-letsencrypt
-      DOCKER_IMAGE_2: nginxproxy/acme-companion:2.6.1
+      DOCKER_IMAGE_2: nginxproxy/acme-companion:2.8.2
     steps:
       - name: executing remote ssh commands
         uses: appleboy/ssh-action@master
@@ -69,7 +69,7 @@ jobs:
       NAME_1: server-routing
       DOCKER_IMAGE_1: ghcr.io/${{ github.repository }}:latest
       NAME_2: server-routing-letsencrypt
-      DOCKER_IMAGE_2: nginxproxy/acme-companion:2.6.1
+      DOCKER_IMAGE_2: nginxproxy/acme-companion:2.8.2
     steps:
       - name: executing remote ssh commands
         uses: appleboy/ssh-action@master
@@ -142,7 +142,7 @@ jobs:
       NAME_1: server-routing
       DOCKER_IMAGE_1: ghcr.io/${{ github.repository }}:latest
       NAME_2: server-routing-letsencrypt
-      DOCKER_IMAGE_2: nginxproxy/acme-companion:2.6.1
+      DOCKER_IMAGE_2: nginxproxy/acme-companion:2.8.2
     steps:
       - name: executing remote ssh commands
         uses: appleboy/ssh-action@master
@@ -215,7 +215,7 @@ jobs:
       NAME_1: server-routing
       DOCKER_IMAGE_1: ghcr.io/${{ github.repository }}:latest
       NAME_2: server-routing-letsencrypt
-      DOCKER_IMAGE_2: nginxproxy/acme-companion:2.6.1
+      DOCKER_IMAGE_2: nginxproxy/acme-companion:2.8.2
     steps:
       - name: executing remote ssh commands
         uses: appleboy/ssh-action@master
